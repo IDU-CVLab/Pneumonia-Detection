@@ -14,6 +14,7 @@ from tensorflow.keras.preprocessing.image import load_img
 
 
 
+## Directory where Pneumonia CT image for trial is at 
 file_path='/home/idu/Desktop/COV19D/Pneumonia/CT/COVID/test-5/IMG-0002-00078.jpg'
 
 
@@ -35,9 +36,8 @@ else:
     
 
 # Trying on the full set 
-# Define the data folder containing the subfolders with images
+# Define the data folder containing the subfolders with CT common Pneumonia images
 data_folder='/home/idu/Desktop/COV19D/Pneumonia/CT/CP/'  ## Common Pneumonia CT images Directory
-
 
 
 # Load the Keras model

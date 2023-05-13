@@ -5,3 +5,9 @@
 * The dataset used for training the CNN model to include Pnumonia cases is a combination of the COV19-CT-DB first run and the Pnomonia cases mentioned above.
 * 4 CT scans (test-59, 61, 62, and 63) of the Common Pnomonia were used for training. Oversampling with 28 duplicate copied was applied on the training set
 * 2 CT scans (test-64 and 65) were used for validation.
+
+# Methodology:
+*	Both oversampling as well as augmentation were done on the Pneumonia class aiming at balancing classes in the dataset. 
+* For oversampling: 28 duplicates copied was applied on the training set. 
+* For data augmentation, and Augmentation method added 3000 images from the existing 199 slices of Common Pneumonia by applying flipping at different degrees and Zooming. The augmentation library at https://github.com/mdbloice/Augmentor was used to perform the task.
+* The method deployed is our COVID first run in 2021.

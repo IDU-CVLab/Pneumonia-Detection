@@ -7,7 +7,7 @@
 * 2 CT scans (test-64 and 65) were used for validation.
 
 # Methodology:
-*	Both oversampling as well as augmentation were done on the Pneumonia class aiming at balancing classes in the dataset. 
-* For oversampling: 28 duplicates copied was applied on the training set. 
-* For data augmentation, and Augmentation method added 3000 images from the existing 199 slices of Common Pneumonia by applying flipping at different degrees and Zooming. The augmentation library at https://github.com/mdbloice/Augmentor was used to perform the task.
-* The method deployed is our COVID first run in 2021.
+*	Augmentation were deployed on the Pneumonia class aiming at balancing classes in the dataset. 
+* For data augmentation, and Augmentation method added 2000 images from the existing 199 slices of Common Pneumonia by applying flipping at different degrees and Zooming. The augmentation library at https://github.com/mdbloice/Augmentor was used to perform the task.
+* The first 51 CT scans were used from COV19-CT-DB database for training; both in covid and non-covid cases (CT's from 0 to 50 were used).
+* The method tried is our COVID first run in 2021.

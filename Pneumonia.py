@@ -335,7 +335,7 @@ f1_score = result.history['f1_score']
 ############################## Making Predictions on the validation set
 ## Choosing the directory where the test/validation data is at
 
-folder_path = '/home/idu/Desktop/COV19D/val2/covid/'
+folder_path = '/home/idu/Desktop/COV19D/val2/non-covid/'
 
 covidd = []
 noncovidd = []
@@ -351,8 +351,8 @@ for fldr in os.listdir(folder_path):
         file_path = os.path.join(sub_folder_path, filee)
         img =load_img(file_path, color_mode='grayscale')
         img=img_to_array(img)
-        #img=cv2.resize(img, (300, 227))
-        img=cv2.resize(img, (224, 224))
+        img=cv2.resize(img, (227, 300))
+        #img=cv2.resize(img, (224, 224))
         img=img_to_array(img)
         img = np.expand_dims(img, axis=0)
         img /= 255.0
@@ -362,7 +362,7 @@ for fldr in os.listdir(folder_path):
         #print(resultt) 
         #result = np.argmax(resultt, axis=-1) 
         
-        ## Increase the probability of class 1
+        ## Decrease the probability of Non-COVID class to avoid biases
         resultt[0][1] *= 0.3  
         result = np.argmax(resultt, axis=-1)
 
@@ -396,6 +396,4 @@ for fldr in os.listdir(folder_path):
 print(len(COVID))
 print(len(NONCOVID))
 print(len(CP))
-
-
-##### BY KENAN MORANI
+## Non-COVID

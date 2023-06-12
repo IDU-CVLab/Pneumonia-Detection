@@ -8,6 +8,6 @@
 
 # Methodology:
 *	Augmentation were deployed on the Pneumonia class aiming at balancing classes in the dataset. 
-* For data augmentation, and Augmentation method added 2000 images from the existing 199 slices of Common Pneumonia by applying flipping at different degrees and Zooming. The augmentation library at https://github.com/mdbloice/Augmentor was used to perform the task.
+* Augmentation focused on zooming, flipping, and rotation.  2000 images from the existing 199 slices of Common Pneumonia were addeeed. The augmentation library at https://github.com/mdbloice/Augmentor was used to perform the task.
 * The first 51 CT scans were used from COV19-CT-DB database for training; both in covid and non-covid cases (CT's from 0 to 50 were used).
 * The method tried is our COVID first run in 2021.

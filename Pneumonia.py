@@ -31,7 +31,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 ## Load models weight [The Pretrained COVID CNN MODEL]
 model.load_weights('/home/idu/Desktop/COV19D/models/imagepreprocesscnnclass.h5')
 
-model = keras.models.load_model('/home/idu/Downloads/Pnumonia-imageprocess-augment-sliceremove-batchnorm-3L-cnn.h5')
+model = keras.models.load_model('/home/idu/Desktop/COV19D/saved-models/Pnumonia-imageprocess-augment-sliceremove-3L-16-32-64-D128-cnn.h5')
 
 
 # Set the class probability threshold for prediction at slice level
@@ -113,6 +113,8 @@ for subdir in os.listdir(data_folder):
  
 # test-59, 61, 62, and 63 were used for training from the CT dataset of pnomonia for training. The rest are used for validation
 # Common Pnomonia folders were copied 28 times in the training folder (Oversampling-Duplication) to increase the class aiming at classes balance
+# Slices were already processed as in our previous paper at https://www.tandfonline.com/doi/abs/10.1080/21681163.2023.2219765?journalCode=tciv20
+# or the free preprint version at https://arxiv.org/abs/2111.11191
 
 
 train_dir = '/home/idu/Desktop/COV19D/train/'
@@ -121,75 +123,62 @@ train_dir_aug = '/home/idu/Desktop/COV19D/train/CP/'  # Augmented Using Augmento
 
 img_height = 300 
 img_width = 227
+#img_height = img_width = 224
 batch_size = 16
 
 #### TRAINING GENERATOR WITH CLASS AUGMENTATION
 
-# [1] Using Augmentator to augment Common Pnumonia class
+# [1] Using Augmentator to augment Common Pnumonia with focus on flipping, zooming and rotation
 # URL https://github.com/mdbloice/Augmentor
 
 import Augmentor
 
-##p = Augmentor.Pipeline(train_dir_aug)
+p = Augmentor.Pipeline(train_dir_aug)
 #Initialised with 199 image(s) found.
 #Output directory set to /home/idu/Desktop/COV19D/train/CP/output.
 
 # Choosing the augmentation method 
-##p.rotate(probability=0.5, max_left_rotation=10, max_right_rotation=10)
+p.rotate(probability=0.5, max_left_rotation=10, max_right_rotation=10)
 #p.rotate270(probability=0.5)
-#p.flip_left_right(probability=0.8)
-#p.flip_top_bottom(probability=0.3)
-##p.crop_random(probability=0.8, percentage_area=0.5)
-##p.zoom(probability=0.8, min_factor=1.1, max_factor=1.5)
+p.flip_left_right(probability=0.3)
+p.flip_top_bottom(probability=0.3)
+#p.crop_random(probability=0.8, percentage_area=0.5)
+p.zoom(probability=0.8, min_factor=1.1, max_factor=1.5)
 
 # Adding samples to the minority calss ('CP')
-##p.sample(2000) 
+p.sample(2000) 
 
+
+# Define augmentation parameters with focus on flipping, zooming and rotation
 train_datagen = ImageDataGenerator(
     rescale=1./255,
     rotation_range=20,
-    zoom_range=0.2,
-    #width_shift_range=0.1,
-    #height_shift_range=0.1,
+    zoom_range=0.3,
     horizontal_flip=True,
-    vertical_flip=True
+    vertical_flip=True,
 )
 
+
 train_generator = train_datagen.flow_from_directory(
-    train_dir,
+    train_dir, ## Images are already processed with cropping and slice removal
     target_size=(img_height, img_width),
     color_mode='grayscale',
-    #color_mode='rgb',
     batch_size=batch_size,
     class_mode='categorical',
     classes=['covid', 'non-covid', 'CP']
 )
 
-
-## [2] Oversampling by replicating 15times
-#train_datagen = ImageDataGenerator(rescale=1./255)
-#train_generator = train_datagen.flow_from_directory(
- #   train_dir,
- #   target_size=(img_height, img_width),
- #   color_mode='grayscale',
- #   #color_mode='rgb',
- #   batch_size=batch_size,
- #   class_mode='categorical',
- #   classes=['covid', 'non-covid', 'C-P']
-#)
-
 #### VALIDATION SET 
 
 val_datagen = ImageDataGenerator(rescale=1./255)
 val_generator = val_datagen.flow_from_directory(
-    val_dir,
+    val_dir, ## Images are already processed with cropping and slice removal
     target_size=(img_height, img_width),
     color_mode='grayscale',
     #color_mode='rgb',
     batch_size=batch_size,
     class_mode='categorical',
     classes=['covid', 'non-covid', 'CP']  # For Augmentation method
-    #classes=['covid', 'non-covid', 'C-P']  # For oversampling method
 )
 
 
@@ -204,19 +193,19 @@ def make_model():
     
     # Convulotional Layer 1
     model.add(layers.Conv2D(16,(3,3),input_shape=(img_height, img_width, 1), padding="same"))
-    model.add(layers.BatchNormalization())
+    #model.add(layers.BatchNormalization())
     model.add(layers.ReLU())
     model.add(layers.MaxPooling2D((2,2)))
     
     # Convulotional Layer 2
     model.add(layers.Conv2D(32,(3,3), padding="same"))  
-    model.add(layers.BatchNormalization())
+    #model.add(layers.BatchNormalization())
     model.add(layers.ReLU())
     model.add(layers.MaxPooling2D((2,2)))
     
     # Convulotional Layer 3
     model.add(layers.Conv2D(64,(3,3), padding="same"))
-    model.add(layers.BatchNormalization())
+    #model.add(layers.BatchNormalization())
     model.add(layers.ReLU())   
     model.add(layers.MaxPooling2D((2,2)))
     
@@ -229,9 +218,9 @@ def make_model():
     # Fully Connected Layer
     model.add(layers.Flatten())
     model.add(layers.Dense(128))
-    model.add(layers.BatchNormalization())
+    #model.add(layers.BatchNormalization())
     model.add(layers.ReLU())
-    model.add(layers.Dropout(0.1))
+    model.add(layers.Dropout(0.2))
     
     # Dense Layer  
     model.add(layers.Dense(3,activation='softmax'))
@@ -243,21 +232,18 @@ def make_model():
 model = make_model()
 
 
-from tensorflow.keras import metrics
+from keras import metrics
 model.compile(
-    optimizer=optimizers.Adam(lr=0.001),
-    #optimizer=optimizer,
+    optimizer=tf.keras.optimizers.Adam(lr=0.001),
     loss='categorical_crossentropy',
     metrics=['accuracy', metrics.Precision(), metrics.Recall()]
 )
 
-early_stopping_cb = keras.callbacks.EarlyStopping(monitor="val_accuracy", patience=7)
-checkpoint_cb = ModelCheckpoint('/home/idu/Desktop/COV19D/saved-models/Pnumonia-imageprocess-augment-sliceremove-3L-16-32-64-D128-cnn.h5',
+
+early_stopping_cb = keras.callbacks.EarlyStopping(monitor="val_accuracy", patience=20)
+checkpoint_cb = ModelCheckpoint('/home/idu/Desktop/COV19D/saved-models/Pnumonia-imageprocess-augment+-sliceremove-3L-16-32-64-D128-cnn-300-227.h5',
 save_best_only=True, save_weights_only=False)
 
-# Calculate steps per epoch and validation steps
-#train_steps = (train_samples_cp + train_samples_2 + train_samples_3) // batch_size
-#val_steps = val_samples // batch_size
 
 from sklearn.utils.class_weight import compute_class_weight
 
@@ -346,10 +332,10 @@ precision = result.history['precision']
 recall = result.history['recall']
 f1_score = result.history['f1_score']
 
-############################## Making Predictions 
+############################## Making Predictions on the validation set
 ## Choosing the directory where the test/validation data is at
 
-folder_path = '/home/idu/Desktop/COV19D/validation/non-covid/'
+folder_path = '/home/idu/Desktop/COV19D/val2/covid/'
 
 covidd = []
 noncovidd = []
@@ -365,16 +351,24 @@ for fldr in os.listdir(folder_path):
         file_path = os.path.join(sub_folder_path, filee)
         img =load_img(file_path, color_mode='grayscale')
         img=img_to_array(img)
-        img=cv2.resize(img, (300, 227))
+        #img=cv2.resize(img, (300, 227))
+        img=cv2.resize(img, (224, 224))
         img=img_to_array(img)
         img = np.expand_dims(img, axis=0)
         img /= 255.0
-        resultt = model.predict(c)
-        print(resultt)
         
-        result = np.argmax(resultt, axis=-1)       
+        ## Taking maximuim class probability
+        resultt = model.predict(img)
+        #print(resultt) 
+        #result = np.argmax(resultt, axis=-1) 
+        
+        ## Increase the probability of class 1
+        resultt[0][1] *= 0.3  
+        result = np.argmax(resultt, axis=-1)
+
+
         #resutlt = result[0]
-        print(result)
+        #print(result)
         if result == 0:  # Class 0
            covidd.append(results)
         if result == 1:
@@ -385,13 +379,13 @@ for fldr in os.listdir(folder_path):
     #print(sub_folder_path, end="\r \n")
     ## The majority voting at Patient's level
     if len(covidd) > len(noncovidd) and len (covidd) > len(cp):
-      print(fldr, colored("COVID", 'blue'), len(covidd), "to", len(noncovidd), "and", len(cp))
+      #print(fldr, colored("COVID", 'blue'), len(covidd), "to", len(noncovidd), "and", len(cp))
       COVID.append(fldr) 
     if len(noncovidd) > len(covidd) and len (noncovidd) > len(cp):
-      print(fldr, colored("NON-COVID", 'red'), len(noncovidd), "to", len(covidd), "and", len(cp))
+      #print(fldr, colored("NON-COVID", 'red'), len(noncovidd), "to", len(covidd), "and", len(cp))
       NONCOVID.append(fldr)
     if len(cp) >= len(covidd) and len(cp) >= len(noncovidd):
-      print (fldr, colored("Comon Pneumonia", 'green'), len(cp), "to", len(covidd), "and", len(noncovidd))
+      #print (fldr, colored("Comon Pneumonia", 'green'), len(cp), "to", len(covidd), "and", len(noncovidd))
       CP.append(fldr)    
        
     covidd=[]
@@ -402,42 +396,6 @@ for fldr in os.listdir(folder_path):
 print(len(COVID))
 print(len(NONCOVID))
 print(len(CP))
-#print(len(covidd6+noncovidd6))
-#print(len(covidd7+noncovidd7))
-#print(len(covidd8+noncovidd8))
 
 
-#### Transfer Learning for Classification
-
- 
-Model_Xcep = tf.keras.applications.Xception(include_top=False, weights='imagenet', input_shape=(img_height, img_width, 3))
-Model_VGG = tf.keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_shape=(SIZE, SIZE, 3))
-
-for layer in Model_Xcep.layers:
-	layer.trainable = False
-    
-for layer in Model_VGG.layers:
-	layer.trainable = False
-    
-Model_Xcep.summary()
-
-###### modified the output
-
-model = tf.keras.Sequential([
-    Model_Xcep, 
-    tf.keras.layers.GlobalAveragePooling2D(), 
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.BatchNormalization(), 
-    tf.keras.layers.Dropout(0.2), 
-    tf.keras.layers.Dense(3, activation='softmax')
-])
-
-model = tf.keras.Sequential([
-    Model_VGG, 
-    tf.keras.layers.GlobalAveragePooling2D(), 
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.BatchNormalization(), 
-    tf.keras.layers.Dropout(0.2), 
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-
+##### BY KENAN MORANI

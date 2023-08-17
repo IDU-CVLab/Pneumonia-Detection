@@ -1,8 +1,8 @@
 # Database:
 * COV19-CT Database: first 51 CT scans in the database were used from each class for training, and full validation set was used for validation.
-* Pneumonia CT images dataset was also used for Pneumonia cases [https://data.mendeley.com/datasets/3y55vgckg6/1](https://data.mendeley.com/datasets/3y55vgckg6/1)
-  1) 4 CT scans (test-59, 61, 62, and 63) were used for training.
-  2) 2 CT scans (test-64 and 65) were used for validation. 
+* Pneumonia CT images dataset was also used for Pneumonia cases [https://data.mendeley.com/datasets/3y55vgckg6/1](https://data.mendeley.com/datasets/3y55vgckg6/1) <br/>
+  - 4 CT scans (test-59, 61, 62, and 63) were used for training  <br/>
+  - 2 CT scans (test-64 and 65) were used for validation  <br/>
 * The dataset used for training and validation is a combination of the above mentions.
 
 

@@ -7,6 +7,6 @@
 
 
 # Methodology:
-*	Augmentation were deployed on the Pneumonia class aiming at balancing classes with the CT images in the COV19CT dtabase. 
+*	Augmentation were deployed on the Pneumonia class aiming at balancing classes with the CT images in the COV19-CT dtabase. 
 * Augmentation focused on zooming, flipping, and rotation; 2000 images from the existing 199 slices of Common Pneumonia were generated. The augmentator at https://github.com/mdbloice/Augmentor was used to perform the task.
 * The method trained is the one used during the first run of the MIA-COVID19 Workshop, 2021 [here](https://github.com/IDU-CVLab/COV19D)

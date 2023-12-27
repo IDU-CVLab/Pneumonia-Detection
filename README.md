@@ -1,4 +1,4 @@
-# Database:
+# Dataset:
 * For COVID and healthy cases, the COV19-CT Database was used; the first 51 CT scans in each class were used for training, and full validation set was used for validation.
 * For Pneumonia cases, a publicly available dataset at [https://data.mendeley.com/datasets/3y55vgckg6/1](https://data.mendeley.com/datasets/3y55vgckg6/1) was used; 4 CT scans (test-59, 61, 62, and 63) were used for training, and 2 CT scans (test-64 and 65) were used for validation.  
 * The dataset used in this method is a combination of the above-mentioned.

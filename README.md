@@ -10,5 +10,5 @@
 * For full details of the method and the results, refer to our paper in the [IMCIDU Congress Proceedings](https://imcidu.idu.edu.tr/index.php/kongre-kitaplari/?lang=en), 2023. (Paper ID 442).  
   
 # Citation
-This study is included in the university's 2023 booklets, following the [5th International Mecical Congress of Izmir Democracy UNiversity (IMCIDU) with ID-442/OP](https://imcidu.idu.edu.tr/index.php/kongre-kitaplari/?lang=en).
+This study is included in the university's 2023 booklets, following the [5th International Medical Congress of Izmir Democracy UNiversity (IMCIDU) with ID-442/OP](https://imcidu.idu.edu.tr/index.php/kongre-kitaplari/?lang=en).
 

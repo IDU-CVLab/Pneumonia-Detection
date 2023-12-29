@@ -10,6 +10,7 @@
 * For full details of the method and the results, refer to our paper imentioned below.  
   
 # Citation
-This study is included as a full-text in the university's 2023 booklets, following the [5th International Medical Congress of Izmir Democracy University (IMCIDU) with ID-442/OP](https://imcidu.idu.edu.tr/index.php/kongre-kitaplari/?lang=en).
+This study is included as a full-text in the university's 2023 booklets, following the [5th International Medical Congress of Izmir Democracy University (IMCIDU) with ID-442/OP](https://imcidu.idu.edu.tr/index.php/kongre-kitaplari/?lang=en).  
+</br></br>
 
 * Kindly inform the organization owner if you wish to obtain the pretrained model in this study
